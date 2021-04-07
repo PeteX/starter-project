@@ -1,0 +1,114 @@
+#!/usr/bin/python3
+
+storage_zone = 'starter-app'
+pull_zone = 330614
+
+import glob, hashlib, os, shutil, sys
+import requests
+
+os.chdir('dist')
+shutil.copy2('index.html', 'oidc.html')
+
+with open(os.path.expanduser('~/.bunnycdn/starter-app')) as h:
+    zone_key = h.readline().strip()
+
+headers = {
+    'AccessKey': zone_key
+}
+
+server_state = {}
+
+def read_dir(server_path):
+    response = requests.get(f'https://storage.bunnycdn.com/{storage_zone}/{server_path}', headers=headers).json()
+    for object in response:
+        object_name = object['Path'] + object['ObjectName']
+        object_name = object_name[len(f'/{storage_zone}/'):]
+        server_state[object_name] = object
+        if object['IsDirectory']:
+            read_dir(f'{object_name}/')
+
+read_dir('')
+
+to_erase = set(server_state.keys())
+to_create = set()
+to_update = set()
+to_skip = set()
+
+client_state = glob.glob('**/*', recursive=True)
+for client_file in client_state:
+    if client_file in server_state:
+        to_erase.remove(client_file)
+        if not os.path.isdir(client_file):
+            hash = hashlib.sha256()
+            with open(client_file, 'rb') as h:
+                hash.update(h.read())
+            if server_state[client_file]['Checksum'].lower() != hash.hexdigest().lower():
+                to_update.add(client_file)
+            else:
+                to_skip.add(client_file)
+    else:
+        to_create.add(client_file)
+
+def report(name, files):
+    print(f'{name}\n')
+    for f in files:
+        print(f)
+    print()
+
+to_erase_list = list(to_erase)
+to_erase_list.sort()
+prefix = None
+to_erase = []
+for filename in to_erase_list:
+    if prefix is None or not filename.startswith(f'{prefix}/'):
+        prefix = filename
+        to_erase.append(filename)
+
+to_create = [x for x in to_create if not os.path.isdir(x)]
+to_create.sort()
+
+to_update = list(to_update)
+to_update.sort()
+
+to_skip = list(to_skip)
+to_skip.sort()
+
+report('Delete', to_erase)
+report('Create', to_create)
+report('Update', to_update)
+report('Skip', to_skip)
+
+for filename in to_create + to_update:
+    print(f'Uploading {filename}...')
+    with open(filename, 'rb') as h:
+        result = requests.put(f'https://storage.bunnycdn.com/{storage_zone}/{filename}', headers=headers, data=h)
+        if result.status_code != 201:
+            print(f'Failed: {result.status_code} {result.text}')
+            sys.exit(1)
+
+for filename in to_erase:
+    if server_state[filename]['IsDirectory']:
+        filename += '/'
+
+    print(f'Deleting {filename}...')
+    result = requests.delete(f'https://storage.bunnycdn.com/{storage_zone}/{filename}', headers=headers)
+    if result.status_code != 200:
+        print(f'Failed: {result.status_code} {result.text}')
+        sys.exit(1)
+
+with open(os.path.expanduser('~/.bunnycdn/access-key')) as h:
+    access_key = h.readline().strip()
+
+headers = {
+    'AccessKey': access_key,
+    'Content-Type': 'application/json',
+    'Accept': 'application/json'
+}
+
+sys.stdout.write('Requesting a cache purge...  ')
+sys.stdout.flush()
+result = requests.post(f'https://bunnycdn.com/api/pullzone/{pull_zone}/purgeCache', headers=headers, data=b'{}')
+if result.status_code == 204:
+    print('done.')
+else:
+    print(f'failed: {result.status_code} {result.text}')

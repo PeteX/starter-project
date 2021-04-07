@@ -1,0 +1,22 @@
+$ui-font: Open Sans;
+$heading-font: Open Sans;
+$body-font: Open Sans;
+$link: rgb(0, 0, 238);
+
+a {
+  color: $link;
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+h1, h2, h3 {
+  font-family: $heading-font;
+  font-weight: bold;
+}
+
+label {
+  font-family: $ui-font;
+}
