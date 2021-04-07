@@ -9,7 +9,8 @@ import appConfig from '../config.json';
 import './document.scss';
 import styles from './app.scss';
 
-import { oidcInit, oidcLoadTokens, getAccessToken, addAuthListener } from './oidc';
+import { oidcInit, oidcLoadTokens, getAccessToken, addAuthListener, getCurrentUser, oidcSignIn, oidcSignOut,
+  editAccountDetails } from './oidc';
 
 let signInComplete: () => void;
 export let signInProgress: Promise<void> = new Promise(resolve => signInComplete = resolve);
@@ -20,6 +21,15 @@ class App extends LitElement {
   render() {
     return html`
       <p>The quick brown fox jumped over the lazy dog.</p>
+
+      <div id=buttons>
+        ${getCurrentUser() ? html`
+          <button class=button @click=${oidcSignOut}>Sign Out</button>
+          <button class=button @click=${editAccountDetails}>Account</button>
+        ` : html`
+          <button class=button @click=${oidcSignIn}>Sign In</button>
+        `}
+      </div>
     `;
   }
 }
