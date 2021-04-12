@@ -1,2 +1,4 @@
 /dist/
 /node_modules/
+/server/bin/
+/server/obj/
