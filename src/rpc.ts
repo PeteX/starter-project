@@ -1,0 +1,48 @@
+import { html, unsafeCSS, LitElement, customElement, PropertyValues } from 'lit-element';
+import { request } from './comms';
+import styles from './rpc.scss';
+
+interface WeatherForecast {
+  date: string;
+  temperatureC: number;
+  temperatureF: number;
+  summary:	string;
+}
+
+@customElement('app-rpc')
+class Rpc extends LitElement {
+  static styles = unsafeCSS(styles);
+
+  #forecast: WeatherForecast[] = [];
+  #status: string = null;
+
+  async firstUpdated(changedProperties: PropertyValues) {
+    try {
+      this.#forecast = await request('/weatherforecast');
+    } catch(e) {
+      this.#status = e.statusText;
+    }
+
+    this.requestUpdate();
+  }
+
+  render() {
+    if(this.#status)
+      return html`
+        <p>Calling server: ${this.#status}</p>
+      `;
+
+    return html`
+      <p>
+        ${this.#forecast.map(forecast => html`
+          <div>
+            ${forecast.date.replace(/T.*/, '')}
+            ${forecast.temperatureC}
+            ${forecast.temperatureF}
+            ${forecast.summary}
+          </div>
+        `)}
+      </p>
+    `;
+  }
+}

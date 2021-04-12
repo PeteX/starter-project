@@ -9,6 +9,8 @@ import appConfig from '../config.json';
 import './document.scss';
 import styles from './app.scss';
 
+import './rpc';
+
 import { oidcInit, oidcLoadTokens, getAccessToken, addAuthListener, getCurrentUser, oidcSignIn, oidcSignOut,
   editAccountDetails } from './oidc';
 
@@ -21,6 +23,8 @@ class App extends LitElement {
   render() {
     return html`
       <p>The quick brown fox jumped over the lazy dog.</p>
+
+      <app-rpc></app-rpc>
 
       <div id=buttons>
         ${getCurrentUser() ? html`
