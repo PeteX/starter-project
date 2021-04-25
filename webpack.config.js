@@ -1,9 +1,5 @@
 const path = require('path');
 
-const classFields = require('acorn-class-fields');
-const acorn = require('acorn');
-acorn.Parser = acorn.Parser.extend(classFields);
-
 const webpack = require('webpack');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
