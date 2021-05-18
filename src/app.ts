@@ -1,8 +1,8 @@
-import firebase from 'firebase/app';
-import 'firebase/auth';
+import { initializeApp } from 'firebase/app'
+import { getAuth, signInWithCustomToken, signOut } from 'firebase/auth';
 import 'firebase/firestore';
 
-import { html, unsafeCSS, LitElement } from 'lit-element';
+import { html, unsafeCSS, LitElement } from 'lit';
 
 import appConfig from '../config.json';
 
@@ -46,11 +46,13 @@ if(process.env.SERVICE_WORKER === 'yes') {
   }
 }
 
-firebase.initializeApp({
+const app = initializeApp({
   apiKey: appConfig.firebaseApiKey,
   databaseURL: `https://${appConfig.firebaseProjectId}.firebaseio.com`,
   projectId: appConfig.firebaseProjectId
 });
+
+const auth = getAuth(app);
 
 async function authListener() {
   let token = await getAccessToken();
@@ -62,9 +64,9 @@ async function authListener() {
     });
 
     let json = await response.json();
-    await firebase.auth().signInWithCustomToken(json.key);
+    await signInWithCustomToken(auth, json.key);
   } else {
-    await firebase.auth().signOut();
+    await signOut(auth);
   }
 
   signInComplete();
