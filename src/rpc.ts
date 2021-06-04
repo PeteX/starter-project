@@ -1,7 +1,7 @@
 import { html, unsafeCSS, LitElement, PropertyValues } from 'lit';
 import { customElement } from 'lit/decorators.js';
 import { request } from './comms';
-import styles from './rpc.scss';
+import styles from './rpc.less';
 
 interface WeatherForecast {
   date: string;

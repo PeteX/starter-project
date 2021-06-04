@@ -6,8 +6,8 @@ import { html, unsafeCSS, LitElement } from 'lit';
 
 import appConfig from '../config.json';
 
-import './document.scss';
-import styles from './app.scss';
+import './document.less';
+import styles from './app.less';
 
 import './rpc';
 

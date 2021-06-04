@@ -51,14 +51,14 @@ const config = {
           'raw-loader'
         ]
       }, {
-        test: /\.s[ac]ss$/,
-        exclude: /\/document\.scss$/,
+        test: /\.less$/,
+        exclude: /\/document\.less$/,
         use: [
           'raw-loader',
-          'sass-loader'
+          'less-loader'
         ]
       }, {
-        test: /\/document\.scss$/,
+        test: /\/document\.less$/,
         use: [
           {
             loader: MiniCssExtractPlugin.loader,
@@ -68,7 +68,7 @@ const config = {
           },
 
           'css-loader',
-          'sass-loader'
+          'less-loader'
         ]
       }, {
         test: /\.(jpe?g|gif|png|svg|webp|woff|ttf|wav|mp3|mp4)$/,
