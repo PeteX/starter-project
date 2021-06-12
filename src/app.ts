@@ -57,7 +57,7 @@ const auth = getAuth(app);
 async function authListener() {
   let token = await getAccessToken();
   if(token) {
-    let response = await fetch('https://extfirebase-nz3lbnk6qa-uc.a.run.app/key', {
+    let response = await fetch('https://extfirebase2-nz3lbnk6qa-nw.a.run.app/key', {
       headers: {
         Authorization: `bearer ${token}`
       }
