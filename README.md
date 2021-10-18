@@ -6,19 +6,19 @@ This is a simple web project with lit-element, a service worker, OIDC authentica
 
 ## Client
 
-The client uses web components.  Essentially, browser vendors looked at component-based libraries such as React and Angular, and realised that there were benefits if they built a lot of the technology into the browser.  For many years adoption was held up because of poor support by Microsoft Edge, but Edge now fully supports web components, so there is no reason not to use them unless support for legacy browsers is required.  This project also uses lit-element, a Google-backed project which adds some utility functions to the basic web component API.
+The client uses web components.  Essentially, browser vendors looked at component-based libraries such as React and Angular, and realised that there were benefits if they built a lot of the technology into the browser.  For many years adoption was held up because of poor support by Microsoft Edge, but Edge now fully supports web components, so there is no reason not to use them unless support for legacy browsers is required.  This project also uses lit, a Google-backed project which adds some utility functions to the basic web component API.
 
 Web components look like normal HTML elements, except that the names are always two words: `<my-element>` not `<myelement>`.  This project achieves this by starting all component names with `app`.
 
 Like Angular components, web components are fully isolated from the rest of the DOM tree.  Because the technology is built into the browser, the rough edges that can arise in Angular are generally absent.  This does mean that each web component is styled completely separately.
 
-In this project, the components and other source files are in the `/src/` directory.  There is a sample web component in `rpc.ts` and its styles are in `rpc.scss`.  Notice how `rpc.scss` includes `global.scss` to allow the application to have global styles as well.
+In this project, the components and other source files are in the `/src/` directory.  There is a sample web component in `rpc.ts` and its styles are in `rpc.less`.  Notice how `rpc.less` includes `global.less` to allow the application to have global styles as well.
 
 Web components are Javascript classes.  Within the object, you have access to the main DOM tree through `this.querySelector` and the isolated ("shadow") DOM tree through `this.shadowRoot.querySelector`.  There is no equivalent of React's refs.  If you want direct access to the elements in your component, you just use standard DOM APIs.
 
 Unlike React and Angular, you request DOM updates explicitly, using `this.requestUpdate`.  It is only automatic if the component's properties have changed.
 
-Documentation for `lit-element` is [here](https://lit-element.polymer-project.org/).  You will notice obvious similarities with React and Angular, but the technology used is built into the browser rather than being retrofitted.
+Documentation for `lit` is [here](https://lit.dev/).  You will notice obvious similarities with React and Angular, but the technology used is built into the browser rather than being retrofitted.
 
 You may also find it helpful to install [this extension](https://marketplace.visualstudio.com/items?itemName=runem.lit-plugin) for Visual Studio Code.  It will apply HTML highlighting and code completion to the ``html` `` HTML strings.
 
