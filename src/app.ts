@@ -1,25 +1,20 @@
 import { initializeApp } from 'firebase/app'
 import { getAuth, signInWithCustomToken, signOut } from 'firebase/auth';
 import 'firebase/firestore';
-
-import { html, unsafeCSS, LitElement } from 'lit';
+import { css, html, LitElement } from 'lit';
 
 import appConfig from '../config.json';
 
-import './document.less';
-import styles from './app.less';
+import globalStyles from './styles';
 
 import './rpc';
 
-import { oidcInit, oidcLoadTokens, getAccessToken, addAuthListener, getCurrentUser, oidcSignIn, oidcSignOut,
-  editAccountDetails } from './oidc';
+import { oidcInit, oidcLoadTokens, getAccessToken, addAuthListener, getCurrentUser, oidcSignIn, oidcSignOut, editAccountDetails } from './oidc';
 
 let signInComplete: () => void;
 export let signInProgress: Promise<void> = new Promise(resolve => signInComplete = resolve);
 
 class App extends LitElement {
-  static styles = unsafeCSS(styles);
-
   render() {
     return html`
       <p>The quick brown fox jumped over the lazy dog.</p>
@@ -36,6 +31,20 @@ class App extends LitElement {
       </div>
     `;
   }
+
+  static styles = [globalStyles, css`
+    :host {
+      --ui-font: Open Sans;
+      --heading-font: Open Sans;
+      --body-font: Open Sans;
+      --link: rgb(0, 0, 238);
+    }
+
+    p {
+      font-family: var(--body-font);
+      color: red;
+    }
+  `];
 }
 
 if(process.env.SERVICE_WORKER === 'yes') {

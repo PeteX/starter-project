@@ -1,7 +1,7 @@
-import { html, unsafeCSS, LitElement, PropertyValues } from 'lit';
+import { css, html, LitElement, PropertyValues } from 'lit';
 import { customElement } from 'lit/decorators.js';
 import { request } from './comms';
-import styles from './rpc.less';
+import globalStyles from './styles';
 
 interface WeatherForecast {
   date: string;
@@ -12,15 +12,13 @@ interface WeatherForecast {
 
 @customElement('app-rpc')
 class Rpc extends LitElement {
-  static styles = unsafeCSS(styles);
-
   #forecast: WeatherForecast[] = [];
   #status: string = null;
 
   async firstUpdated(changedProperties: PropertyValues) {
     try {
       this.#forecast = await request('/weatherforecast');
-    } catch(e) {
+    } catch(e: any) {
       this.#status = e.statusText;
     }
 
@@ -46,4 +44,11 @@ class Rpc extends LitElement {
       </p>
     `;
   }
+
+  static styles = [globalStyles, css`
+    p {
+      font-family: var(--body-font);
+      color: green;
+    }
+  `];
 }

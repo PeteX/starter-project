@@ -1,7 +1,7 @@
 {
-  "oidcServer": "https://accounts.tomatwo.com/.well-known/openid-configuration",
+  "oidcServer": "https://accounts.tomatwo.com/auth/realms/tomatwo/.well-known/openid-configuration",
   "oidcClientId": "starter-app",
-  "accountUrl": "https://accounts.tomatwo.com/Identity/Account/Manage",
+  "accountUrl": "https://accounts.tomatwo.com/auth/realms/tomatwo/account",
 
   "firebaseApiKey": "YOUR_KEY_HERE_AAAAAAAAAAAAAAAAAAAAAAAAA",
   "firebaseProjectId": "hosting-201116"
